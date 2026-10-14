@@ -36,7 +36,7 @@ body, [data-v-surface-bg] {
 }
 
 /* Logo */
-[data-v-logo-image] { height: 30px; max-height: 30px; width: auto; }
+[data-v-logo-image] { height: 40px !important; max-height: 40px !important; width: auto; }
 
 /* Sidebar section labels as bracketed mono eyebrows: [ SPECIFICATION ] */
 [data-v-sidebar-section-header] {
