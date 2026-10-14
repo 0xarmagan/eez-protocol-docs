@@ -3,8 +3,9 @@ import { defineConfig } from 'vocs/config'
 export default defineConfig({
   title: 'EEZ Docs',
   basePath: '/eez-protocol-docs',
-  baseUrl: 'https://0xarmagan.github.io/eez-protocol-docs',
+  baseUrl: 'https://0xarmagan.github.io',
   renderStrategy: 'full-static',
+  head: { base: false },
   colorScheme: 'dark',
   accentColor: '#3BE57E',
   logoUrl: '/eez-protocol-docs/logo.svg',
