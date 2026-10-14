@@ -1,0 +1,94 @@
+/* EEZ theme — tokens from the eez-demos DESIGN.md (pure-black engineering aesthetic). */
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap');
+
+:root:root {
+  --eez-green: #3BE57E;
+  --eez-canvas: #0A0A0A;
+  --eez-screen: #161616;
+  --eez-chrome: #1F1F1F;
+  --eez-edge: #2E2E2E;
+  --eez-muted: #9aa3b3;
+  --eez-grad: linear-gradient(90deg, #8AE5AC 0%, #6283BD 55%, #4439CB 100%);
+
+  --vocs-font-family-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --vocs-background-color-surface: var(--eez-canvas);
+  --vocs-background-color-primary: var(--eez-canvas);
+  --vocs-background-color-code-block: var(--eez-screen);
+  --vocs-background-color-inline-code: var(--eez-chrome);
+  --vocs-background-color-blockquote: var(--eez-screen);
+  --vocs-border-color-primary: var(--eez-edge);
+  --vocs-border-color-secondary: #1a1a1a;
+  --vocs-text-color-primary: #c9cfda;
+  --vocs-text-color-secondary: var(--eez-muted);
+  --vocs-text-color-muted: var(--eez-muted);
+  --vocs-text-color-heading: #fff;
+}
+
+html, body { background: #000; }
+
+/* Faint 42px grid behind the page and the content surface */
+body, [data-v-surface-bg] {
+  background-color: var(--eez-canvas);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .045) 1px, transparent 1px);
+  background-size: 42px 42px;
+}
+
+/* Logo */
+[data-v-logo-image] { height: 30px; max-height: 30px; width: auto; }
+
+/* Sidebar section labels as bracketed mono eyebrows: [ SPECIFICATION ] */
+[data-v-sidebar-section-header] {
+  font-family: var(--vocs-font-family-mono);
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--eez-muted);
+}
+[data-v-sidebar-section-header] > :first-child::before { content: '[\00a0'; }
+[data-v-sidebar-section-header] > :first-child::after { content: '\00a0]'; }
+
+/* Code blocks read as terminal panes: screen surface, edge hairline, permanent gradient top rail */
+[data-v-code-container] {
+  position: relative;
+  border: 1px solid var(--eez-edge);
+  border-radius: 10px;
+  overflow: hidden;
+}
+[data-v-code-container]::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--eez-grad);
+  z-index: 1;
+}
+
+/* Shared green focus ring */
+a:focus-visible, button:focus-visible, input:focus-visible, pre:focus-visible {
+  outline: 2px solid var(--eez-green);
+  outline-offset: 2px;
+}
+
+/* Landing page */
+.eez-eyebrow {
+  font-family: var(--vocs-font-family-mono);
+  font-size: 12.5px;
+  letter-spacing: .1em;
+  color: var(--eez-muted);
+}
+.eez-hero {
+  font-size: 48px;
+  line-height: 1.08;
+  letter-spacing: -.01em;
+  text-wrap: balance;
+}
+.eez-hero .w { font-weight: 800; color: #fff; }
+.eez-hero .l { font-weight: 300; color: #dcdcdc; }
+@media (max-width: 640px) { .eez-hero { font-size: 32px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

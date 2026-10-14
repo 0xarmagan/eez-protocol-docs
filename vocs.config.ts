@@ -5,6 +5,10 @@ export default defineConfig({
   basePath: '/eez-protocol-docs',
   baseUrl: 'https://0xarmagan.github.io/eez-protocol-docs',
   renderStrategy: 'full-static',
+  colorScheme: 'dark',
+  accentColor: '#3BE57E',
+  logoUrl: '/eez-protocol-docs/logo.svg',
+  iconUrl: '/eez-protocol-docs/favicon.svg',
   description: 'Specifications for the EEZ core protocol contracts.',
   socials: [
     { icon: 'github', link: 'https://github.com/eez-association/eez-core-protocol' },
