@@ -100,15 +100,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, pre:focus-visible {
 /* Section cards: whole card is one link (stretched from the title link) */
 .eez-cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   margin-top: 40px;
 }
-.eez-card--primary { grid-column: 1 / -1; min-height: 0 !important; }
-.eez-card--primary .eez-card-title { font-size: 24px; letter-spacing: -.01em; }
-.eez-card--primary .eez-card-hook { font-size: 15px; color: #c9cfda; max-width: 52ch; }
-.eez-card--primary .eez-arrow { background: #fff; box-shadow: none; color: #0A0A0A; width: 32px; height: 32px; }
-@media (max-width: 900px) { .eez-cards { grid-template-columns: 1fr; } }
+/* Start here keeps the one solid arrow as the primary action */
+.eez-card--primary .eez-arrow { background: #fff; box-shadow: none; color: #0A0A0A; }
+@media (max-width: 700px) { .eez-cards { grid-template-columns: 1fr; } }
 .eez-card {
   position: relative;
   display: flex;
