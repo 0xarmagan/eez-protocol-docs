@@ -2,28 +2,33 @@
 
 <h1 className="eez-hero"><span className="w">EEZ</span> <span className="l">protocol</span> <span className="w">docs</span></h1>
 
-Specifications for the EEZ core protocol contracts. These pages are generated from the [`docs/`](https://github.com/eez-association/eez-core-protocol/tree/143d87e/docs) folder of `eez-core-protocol` at commit [`143d87e`](https://github.com/eez-association/eez-core-protocol/commit/143d87e). Source links point to that commit.
+<p className="eez-lede">EEZ lets based rollups that share the same L1 sequencer call each other synchronously: state transitions are pre-computed off-chain and verified on-chain by a configurable set of proof systems, so a cross-rollup call can complete atomically within a single L1 block.</p>
 
-## Start here
+<p className="eez-source">Generated from <a href="https://github.com/eez-association/eez-core-protocol/tree/143d87e/docs">eez-core-protocol/docs</a> at commit <a href="https://github.com/eez-association/eez-core-protocol/commit/143d87e">143d87e</a>.</p>
 
-- [Walkthrough](/eez-walkthrough)
-
-## Specification
-
-- [Core protocol](/core-protocol-spec)
-- [Execution entries](/execution-entry-spec)
-- [Static entries](/static-entry)
-- [Multi-prover](/multi-prover-spec)
-- [Events and reconstruction](/events)
-
-## Limits and boundaries
-
-- [Call-pattern limits](/call-pattern-limits)
-- [Caveats](/caveats)
-- [Integration boundaries](/integration-boundaries)
-
-## Blobs
-
-- [Message format](/blobs/blob-format-spec)
-- [U256 compressed codec](/blobs/u256-compressed-codec)
-- [Future optimizations](/blobs/future-optimizations)
+<div className="eez-cards">
+  <div className="eez-card">
+    <span className="eez-card-num">01</span>
+    <p className="eez-card-title">[Start here](/eez-walkthrough)</p>
+    <p className="eez-card-hook">Follow one call through preparation, proof verification and local execution.</p>
+    <span className="eez-card-cta">WALKTHROUGH <span className="eez-arrow" aria-hidden="true">→</span></span>
+  </div>
+  <div className="eez-card">
+    <span className="eez-card-num">02</span>
+    <p className="eez-card-title">[Specification](/core-protocol-spec)</p>
+    <p className="eez-card-hook">Core protocol, execution and static entries, multi-prover verification, and events.</p>
+    <span className="eez-card-cta">5 PAGES <span className="eez-arrow" aria-hidden="true">→</span></span>
+  </div>
+  <div className="eez-card">
+    <span className="eez-card-num">03</span>
+    <p className="eez-card-title">[Limits and boundaries](/call-pattern-limits)</p>
+    <p className="eez-card-hook">Supported call patterns and current limits, caveats, and what sits outside the contracts.</p>
+    <span className="eez-card-cta">3 PAGES <span className="eez-arrow" aria-hidden="true">→</span></span>
+  </div>
+  <div className="eez-card">
+    <span className="eez-card-num">04</span>
+    <p className="eez-card-title">[Blobs](/blobs/blob-format-spec)</p>
+    <p className="eez-card-hook">The standardized message format, the U256 compressed codec, and future optimizations.</p>
+    <span className="eez-card-cta">3 PAGES <span className="eez-arrow" aria-hidden="true">→</span></span>
+  </div>
+</div>
