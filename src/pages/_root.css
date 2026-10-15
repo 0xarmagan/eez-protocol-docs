@@ -35,8 +35,20 @@ body, [data-v-surface-bg] {
   background-size: 42px 42px;
 }
 
-/* Logo */
-[data-v-logo-image] { height: 40px !important; max-height: 40px !important; width: auto; }
+/* Logo: full lockup in the desktop sidebar, mark only in the compact top bar.
+   The mark is the left 262/910 of the lockup, so the top bar crops the same file
+   with object-fit instead of loading a second image. */
+[data-v-logo-image] { width: auto; aspect-ratio: 910 / 428; }
+[data-v-gutter-logo] [data-v-logo] { padding-block: 6px 0; }
+[data-v-gutter-logo] [data-v-logo-image] { height: 50px !important; max-height: 50px !important; }
+[data-v-logo-link] [data-v-logo-image] {
+  height: 34px !important;
+  max-height: 34px !important;
+  width: calc(34px * 262 / 910 * 910 / 428) !important;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: left center;
+}
 
 /* Sidebar section labels as bracketed mono eyebrows: [ SPECIFICATION ] */
 [data-v-sidebar-section-header] {
@@ -87,7 +99,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, pre:focus-visible {
 }
 .eez-hero .w { font-weight: 800; color: #fff; }
 .eez-hero .l { font-weight: 300; color: #dcdcdc; }
-@media (max-width: 640px) { .eez-hero { font-size: 32px; } }
+@media (max-width: 640px) { .eez-hero { font-size: clamp(30px, 9vw, 40px); } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
@@ -128,13 +140,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, pre:focus-visible {
   opacity: 0;
   transition: opacity .2s ease;
 }
-.eez-card:hover, .eez-card:focus-within {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 44px -20px rgba(0, 0, 0, .75);
-  background: #0d0d0d;
-  border-color: #333;
+/* Lift only where hover exists; touch gets press feedback instead */
+@media (hover: hover) {
+  .eez-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 44px -20px rgba(0, 0, 0, .75);
+    background: #0d0d0d;
+    border-color: #333;
+  }
+  .eez-card:hover::before { opacity: 1; }
+  .eez-card:hover .eez-arrow { transform: translateX(3px); background: linear-gradient(180deg, #8ce8ab, #3f2acd); box-shadow: none; color: #0A0A0A; }
 }
-.eez-card:hover::before, .eez-card:focus-within::before { opacity: 1; }
+.eez-card:focus-within { background: #0d0d0d; border-color: #333; }
+.eez-card:focus-within::before, .eez-card:active::before { opacity: 1; }
+.eez-card:active { background: #0d0d0d; border-color: #333; }
 .eez-card p { margin: 0; }
 .eez-card-num { font-family: var(--vocs-font-family-mono); font-size: 12px; color: #858585; }
 .eez-card-title { margin-top: 10px !important; font-size: 17.5px; font-weight: 600; line-height: 1.35; }
@@ -166,11 +185,23 @@ a:focus-visible, button:focus-visible, input:focus-visible, pre:focus-visible {
   font-size: 14px;
   transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
 }
-.eez-card:hover .eez-arrow { transform: translateX(3px); background: linear-gradient(180deg, #8ce8ab, #3f2acd); box-shadow: none; color: #0A0A0A; }
 
 @media (max-width: 700px) {
   .eez-card { min-height: 0; padding: 22px 20px 20px; }
   .eez-cards { margin-bottom: 72px; } /* clear the floating Ask AI pill */
+  .eez-lede { font-size: 17px; }
+}
+
+/* Phones: long Solidity identifiers wrap instead of being clipped at the edge */
+[data-v-content] :is(p, li, h1, h2, h3, h4, h5, blockquote, em, strong) > code,
+[data-v-content] :is(p, li) > a { overflow-wrap: anywhere; }
+/* Tables keep identifiers intact and scroll inside their own wrapper */
+[data-v-table-wrapper] { overflow-x: auto; }
+[data-v-table-wrapper] code { white-space: nowrap; }
+
+/* Landscape phones: the floating Ask AI pill would cover a third of the screen */
+@media (max-height: 500px) and (orientation: landscape) {
+  [data-v-ask-ai-container] { display: none; }
 }
 
 ::selection { background: rgba(59, 229, 126, .28); color: #fff; }

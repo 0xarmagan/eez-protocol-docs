@@ -1,3 +1,16 @@
+diff --git a/node_modules/vocs/dist/react/Layout.client.js b/node_modules/vocs/dist/react/Layout.client.js
+index 04bbb6d..3a9a56a 100644
+--- a/node_modules/vocs/dist/react/Layout.client.js
++++ b/node_modules/vocs/dist/react/Layout.client.js
+@@ -47,7 +47,7 @@ export function Logo() {
+             if (!logoUrl)
+                 return (_jsx("div", { className: "vocs:text-2xl vocs:text-heading vocs:tracking-tight vocs:font-bold", "data-v-logo-text": true, children: title }));
+             if (typeof logoUrl === 'string')
+-                return (_jsx("img", { alt: "Logo", className: "vocs:h-full vocs:max-h-7", "data-v-logo-image": true, src: logoUrl }));
++                return (_jsx("img", { alt: `${title} home`, width: 910, height: 428, decoding: "async", className: "vocs:h-full vocs:max-h-7", "data-v-logo-image": true, src: logoUrl }));
+             return (_jsxs(_Fragment, { children: [_jsx("img", { alt: "Logo", className: "vocs:h-full vocs:max-h-7 vocs:dark:hidden", "data-v-logo-image": true, src: logoUrl.light }), _jsx("img", { alt: "Logo", className: "vocs:h-full vocs:max-h-7 vocs:hidden vocs:dark:block", "data-v-logo-image": true, src: logoUrl.dark })] }));
+         })() }));
+ }
 diff --git a/node_modules/vocs/dist/react/internal/SkipToContent.client.js b/node_modules/vocs/dist/react/internal/SkipToContent.client.js
 index 8f1ab06..35744a1 100644
 --- a/node_modules/vocs/dist/react/internal/SkipToContent.client.js
