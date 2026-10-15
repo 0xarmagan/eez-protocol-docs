@@ -116,6 +116,16 @@ a:focus-visible, button:focus-visible, input:focus-visible, pre:focus-visible {
   gap: 16px;
   margin-top: 40px;
 }
+/* Hands-on: secondary external links below the doc sections */
+.eez-section-label { margin: 56px 0 0 !important; padding: 0 !important; border: 0 !important; font-weight: 400 !important; line-height: 1.4; }
+.eez-section-label::before, .eez-section-label::after { display: none; }
+.eez-cards--ext { margin-top: 18px; }
+.eez-card--ext { min-height: 0 !important; }
+.eez-card--ext .eez-card-title { margin-top: 0 !important; }
+.eez-card--ext .eez-card-title a svg { display: none; } /* the CTA arrow already marks it external */
+@media (hover: hover) {
+  .eez-card--ext:hover .eez-arrow { transform: translate(2px, -2px); }
+}
 /* Start here keeps the one solid arrow as the primary action */
 .eez-card--primary .eez-arrow { background: #fff; box-shadow: none; color: #0A0A0A; }
 @media (max-width: 700px) { .eez-cards { grid-template-columns: 1fr; } }
@@ -188,7 +198,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, pre:focus-visible {
 
 @media (max-width: 700px) {
   .eez-card { min-height: 0; padding: 22px 20px 20px; }
-  .eez-cards { margin-bottom: 72px; } /* clear the floating Ask AI pill */
+  .eez-cards:last-of-type { margin-bottom: 72px; } /* clear the floating Ask AI pill */
+  .eez-section-label { margin-top: 44px !important; }
   .eez-lede { font-size: 17px; }
 }
 
