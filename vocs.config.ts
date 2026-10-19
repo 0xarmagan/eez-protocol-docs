@@ -1,4 +1,9 @@
+import { readFileSync } from 'node:fs'
 import { defineConfig } from 'vocs/config'
+
+// Written by scripts/sync-docs.mjs.
+const { commit } = JSON.parse(readFileSync('src/sync.json', 'utf8'))
+const core = 'https://github.com/eez-association/eez-core-protocol'
 
 export default defineConfig({
   title: 'EEZ Protocol Documents',
@@ -11,6 +16,33 @@ export default defineConfig({
   logoUrl: '/eez-protocol-docs/logo.svg',
   iconUrl: '/eez-protocol-docs/favicon.svg',
   description: 'Specifications for the EEZ core protocol contracts.',
+  banner: {
+    content: `Synced from eez-core-protocol at commit ${commit}`,
+    href: `${core}/tree/${commit}/docs`,
+    variant: 'info',
+    dismissable: false,
+  },
+  topNav: [
+    { text: 'Docs', link: '/' },
+    { text: 'EEZ Demos', link: 'https://eez-demos.vercel.app', external: true },
+    { text: 'eez.dev', link: 'https://eez.dev', external: true },
+  ],
+  // Serialized with toString, so it must stay self-contained. Synced pages map back
+  // to upstream `docs/` names (blobs/blob-format-spec.md → blobs/BLOB_FORMAT_SPEC.md).
+  editLink: {
+    text: 'Suggest changes to this page',
+    link: (filePath) =>
+      filePath.endsWith('.mdx')
+        ? `https://github.com/0xarmagan/eez-protocol-docs/edit/main/src/pages/${filePath}`
+        : `https://github.com/eez-association/eez-core-protocol/edit/main/docs/${filePath.replace(
+            /[^/]+(?=\.md$)/,
+            (name) => name.toUpperCase().replace(/-/g, '_'),
+          )}`,
+  },
+  // Images come from scripts/og/build.mjs (GitHub Pages can't serve Vocs' dynamic /api/og).
+  // Serialized with toString like editLink, so the base path is written out here.
+  ogImageUrl: (path, { baseUrl }) =>
+    `${baseUrl}/eez-protocol-docs/og/${path.replace(/^\/eez-protocol-docs/, '').replace(/^\/$/, '/index').slice(1)}.png`,
   socials: [
     { icon: 'github', link: 'https://github.com/eez-association/eez-core-protocol' },
   ],

@@ -1,3 +1,7 @@
+---
+description: "Read-only cross-chain calls (STATICCALLs) and the resolution of reverting mutable reentrant calls: routing, position keys, resolution and root pins."
+---
+
 # Static Entry Specification
 
 This document specifies **read-only cross-chain calls** (STATICCALLs) and the related
@@ -113,7 +117,7 @@ Notes:
 Every reentrant-table row is content-addressed by one value
 (`EEZBase._computeExpectedL1toL2Hash`):
 
-```
+```solidity
 expectedL1toL2Hash = keccak256(abi.encodePacked(crossChainCallHash, expectedRollingHash))
 ```
 
@@ -163,7 +167,7 @@ see [call-pattern limits](/call-pattern-limits).
 **Reverted reentrant call** — `_consumeNestedCall` → `_resolveNestedReentrant`, `success == false`
 row:
 
-```
+```solidity
 advance _lastL1ToL2CallConsumed past the matched row
 _rollingHashNestedBegin(crossChainCallHash)          // open the frame
 _processL2ToL1Calls(row.l2ToL1Calls)                      // run the frame's OWN sub-array, tagged schema
@@ -191,7 +195,7 @@ candidate-specific callback-hash check for successful rows.
 
 Match predicate (full scan — a non-matching candidate is skipped, never an error):
 
-```
+```solidity
 staticEntry.proxyEntryHash == crossChainCallHash
 && staticEntry.destinationRollupId == destRid
 && _rootsMatch(staticEntry)        // every pin equals the live root — §6
@@ -225,7 +229,7 @@ The processor is `_processStaticL2ToL1Calls` on L1 and `_processStaticIncomingCa
 
 Both the reentrant STATIC branch and the top-level pool resolve through `_resolveStaticEntry`:
 
-```
+```solidity
 if _processStaticL2ToL1Calls(calls) != rollingHash: return false
 if (!success) revert(returnData)
 return true // caller returns this row's cached returnData

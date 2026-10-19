@@ -1,3 +1,7 @@
+---
+description: "Support limits and external obligations outside the contracts: builder and prover, L2 funding, deployment and proof domains, event consumers."
+---
+
 # Integration boundaries
 
 These are current support limits and external obligations, not claims that missing node, circuit or deployment behavior has been implemented. Bridge and all `src/periphery/` fixtures are test-only and outside the protocol audit scope.

@@ -1,3 +1,7 @@
+---
+description: "Deferred size optimizations for the blob message format: compressed rollup ids, compressed u256 values and dense blob packing."
+---
+
 # Future Optimizations
 
 Deferred size optimizations for the blob message format

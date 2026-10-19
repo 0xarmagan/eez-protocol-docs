@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vocs dev",
-    "build": "vocs build",
+    "build": "node scripts/og/build.mjs && vocs build",
     "preview": "vocs preview",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "og": "node scripts/og/build.mjs"
   },
   "dependencies": {
     "mermaid": "^11",

@@ -216,3 +216,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, pre:focus-visible {
 }
 
 ::selection { background: rgba(59, 229, 126, .28); color: #fff; }
+
+/* Step titles are flex in Vocs, which splits titles with inline code into columns */
+[data-v-step-title] { display: block; }

@@ -1,3 +1,7 @@
+---
+description: "A binary format for publishing rollup activity as one stream of messages: operations, cross-rollup calls, results, reverts and transaction boundaries."
+---
+
 # Standardized Message Format
 
 A binary format for publishing rollup activity as a single stream of
@@ -34,7 +38,7 @@ These conventions apply across the per-type layouts in §2:
   [varint](https://protobuf.dev/programming-guides/encoding/#varints) length, then
   exactly that many payload bytes:
 
-  ```
+  ```text
   ac 02                  ← varint(300), 2 bytes
   d0 9e … (300 bytes)    ← the payload itself, as-is
   ```
@@ -83,7 +87,7 @@ matching return (or finish) has not yet arrived.
 
 **Example** — nested calls, a return, then a sibling call:
 
-```
+```text
 InitiateCrossRollupTransaction (rollup_id: R1)    # stack: [R1]
 Call (to_rollup: R2)   # from = R1 (top of stack)          → stack: [R1, R2]
 Call (to_rollup: R3)   # from = R2 (last call's to_rollup)  → stack: [R1, R2, R3]
@@ -118,14 +122,18 @@ Each row gives the complete field layout in wire order; §2.1–2.8 add the pros
 | `9` | `Revert` | `u8 message_type` |
 | `10` | `FinishCrossRollupTransaction` | `u8 message_type` |
 
-> **Type `0` is reserved as invalid** so zero padding never parses as messages — a stream
-> with blobs but missing its `CloseBlobStream` fails at the first padding byte instead of decoding it as
-> valid markers.
+:::warning
+**Type `0` is reserved as invalid** so zero padding never parses as messages — a stream
+with blobs but missing its `CloseBlobStream` fails at the first padding byte instead of decoding it as
+valid markers.
+:::
 
-> **Pairing.** Three pairs always come matched: every `Call` / `StaticCall` has a result —
-> `ReturnSuccess` (`6`) or `ReturnFail` (`7`); every `Snapshot` a `Revert`; and every
-> `InitiateCrossRollupTransaction` a `FinishCrossRollupTransaction`. `RollupOperation` and
-> `CloseBlobStream` stand alone.
+:::info
+**Pairing.** Three pairs always come matched: every `Call` / `StaticCall` has a result —
+`ReturnSuccess` (`6`) or `ReturnFail` (`7`); every `Snapshot` a `Revert`; and every
+`InitiateCrossRollupTransaction` a `FinishCrossRollupTransaction`. `RollupOperation` and
+`CloseBlobStream` stand alone.
+:::
 
 ### 2.1 `CloseBlobStream`
 Marks the end of meaningful content in the **blob portion** of the stream — **mandatory,
@@ -157,24 +165,26 @@ struct RollupOperation {          // type 2
 }
 ```
 
-> **Reference implementation (not protocol).** Everything about how `operations` is
-> structured is up to the rollup. The reference implementation encodes it as a `RollupOpItem[]`
-> (a `u32` count, then items), each item a transaction or a new-block marker, where a
-> `NewBlock` implicitly closes the previous block. None of this is mandated — it only makes
-> the examples below concrete.
->
-> ```c
-> RollupOpItem { u8 item_type; bytes item_data; }   // 1 = Transaction, 2 = NewBlock
-> // Transaction: rlp_transaction   |   NewBlock: block_params (e.g. timestamp)
-> ```
->
-> Whether a `Transaction`'s `rlp_transaction` carries a signature is **up to the rollup** —
-> some rollups include it, others omit it. The format does not
-> mandate either way; the rollup that interprets `operations` knows what to expect.
+:::info
+**Reference implementation (not protocol).** Everything about how `operations` is
+structured is up to the rollup. The reference implementation encodes it as a `RollupOpItem[]`
+(a `u32` count, then items), each item a transaction or a new-block marker, where a
+`NewBlock` implicitly closes the previous block. None of this is mandated — it only makes
+the examples below concrete.
+
+```c
+RollupOpItem { u8 item_type; bytes item_data; }   // 1 = Transaction, 2 = NewBlock
+// Transaction: rlp_transaction   |   NewBlock: block_params (e.g. timestamp)
+```
+
+Whether a `Transaction`'s `rlp_transaction` carries a signature is **up to the rollup** —
+some rollups include it, others omit it. The format does not
+mandate either way; the rollup that interprets `operations` knows what to expect.
+:::
 
 **Example** — rollup `7` opens a block, runs two txs, opens a second block, runs one more:
 
-```
+```text
 message_type = 2
 rollup_id     = 7
 operations   = RollupOpItem[5] {
@@ -328,7 +338,7 @@ The canonical shape of a slot. Each rollup first runs its native txs and **opens
 cross-rollup block; the cross-rollup transactions are processed between the open blocks; once
 all are done, each rollup **closes** its block (one `RollupOperation` per rollup):
 
-```
+```text
 # 1. L2_A: native txs + open its cross-rollup block
 RollupOperation (rollup_id: L2_A, operations: [ NewBlock{ts}, Tx, Tx ])
 
@@ -350,7 +360,7 @@ RollupOperation (rollup_id: L2_B, operations: [ NewBlock{ts'} ])   # closeBlock 
 
 A `Snapshot` … `Revert` bracket forces everything inside it to roll back:
 
-```
+```text
 InitiateCrossRollupTransaction (rollup_id: L2_A) # the bracket the region lives in (§2.6)
 Snapshot                                       # open revertable region
 Call           (to L2_B, ...)                  # from L2_A (implicit)
@@ -363,7 +373,7 @@ FinishCrossRollupTransaction
 
 Brackets nest; each `Revert` closes the innermost open `Snapshot`:
 
-```
+```text
 InitiateCrossRollupTransaction (rollup_id: L2_A)
 Snapshot                         # outer region opens
 Call           (to L2_B, ...)    # from L2_A

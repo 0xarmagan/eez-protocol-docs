@@ -1,3 +1,7 @@
+---
+description: "Follow one call through preparation, proof verification and local execution, then tables, hashes, rollback, ETH accounting and system authority."
+---
+
 # EEZ walkthrough
 
 Start here to understand how EEZ connects calls across Ethereum and participating
@@ -55,16 +59,25 @@ block. Section 6 follows those paths in detail.
 
 Suppose Alice calls `Counter.increment()` on L2 through Counter's proxy on L1. Assume zero ETH, no callbacks, and a successful predicted return value of `1`.
 
-**Preparation.** The composer predicts Counter's result and the L2 transition from root S0 to S1. The L1 entry contains the call identity, that root transition, cached return data `abi.encode(1)`, and an expected rolling hash. The entry has no local application calls to execute on L1. Proofs attest the entry.
+::::steps
 
-**L1 posting.** The account or contract submitting the batch—the poster—calls `postAndVerifyBatch`. For this example the entry is deferred into the destination rollup's queue.
+#### Preparation
 
-**L1 consumption.** In the same L1 block, Alice calls Counter's proxy. EEZ reconstructs the call identity and scans for an entry matching that identity, destination rollup, and live S0 root. It runs the entry, applies S1, checks the rolling hash and ETH accounting, and returns the cached `1` to Alice.
+The composer predicts Counter's result and the L2 transition from root S0 to S1. The L1 entry contains the call identity, that root transition, cached return data `abi.encode(1)`, and an expected rolling hash. The entry has no local application calls to execute on L1. Proofs attest the entry.
 
-**L2 execution.** The node supplies the corresponding table through the system-only
-`executeIncomingCrossChainCall`. EEZL2 executes the real Counter call through Alice's
-proxy on L2 and checks its local rolling hash. Each chain executes its own part of
-the operation.
+#### L1 posting
+
+The account or contract submitting the batch—the poster—calls `postAndVerifyBatch`. For this example the entry is deferred into the destination rollup's queue.
+
+#### L1 consumption
+
+In the same L1 block, Alice calls Counter's proxy. EEZ reconstructs the call identity and scans for an entry matching that identity, destination rollup, and live S0 root. It runs the entry, applies S1, checks the rolling hash and ETH accounting, and returns the cached `1` to Alice.
+
+#### L2 execution
+
+The node supplies the corresponding table through the system-only `executeIncomingCrossChainCall`. EEZL2 executes the real Counter call through Alice's proxy on L2 and checks its local rolling hash. Each chain executes its own part of the operation.
+
+::::
 
 ```mermaid
 flowchart TD
@@ -143,13 +156,29 @@ Before participation, a rollup deploys its policy contract and registers it with
 
 `postAndVerifyBatch` then follows this sequence:
 
-1. Check optional live-root assertions and structural constraints: ordering, registration, proof-system indices, entry membership, and prefix bounds.
-2. Ask each rollup manager to approve its selected proof-system subset and return its verification keys. The reference manager enforces its threshold and membership here.
-3. Verify one proof per listed proof system. Every proof must pass; a false result or verifier revert aborts the post.
-4. Mark participating rollups verified in the current block and replace their previous queues and cursors.
-5. Attempt the leading zero-hash L2Tx entries directly from calldata.
-6. Load any remaining immediate entries and invoke the poster's `executeMetaCrossChainTransactions()` hook to consume them.
-7. Publish the deferred remainder to per-rollup queues, discard immediate leftovers, and clear the temporary tables.
+::::steps
+
+#### Check optional live-root assertions and structural constraints
+
+Ordering, registration, proof-system indices, entry membership, and prefix bounds.
+
+#### Ask each rollup manager to approve its selected proof-system subset and return its verification keys
+
+The reference manager enforces its threshold and membership here.
+
+#### Verify one proof per listed proof system
+
+Every proof must pass; a false result or verifier revert aborts the post.
+
+#### Mark participating rollups verified in the current block and replace their previous queues and cursors
+
+#### Attempt the leading zero-hash L2Tx entries directly from calldata
+
+#### Load any remaining immediate entries and invoke the poster's `executeMetaCrossChainTransactions()` hook to consume them
+
+#### Publish the deferred remainder to per-rollup queues, discard immediate leftovers, and clear the temporary tables
+
+::::
 
 ### Immediate work, deferred queues and settlement order
 
