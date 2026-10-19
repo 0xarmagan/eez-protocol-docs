@@ -1,3 +1,7 @@
+---
+description: "Which call patterns the current tables support, and where CALL, STATICCALL and revert traces lack a faithful table encoding or exceed retry budgets."
+---
+
 # Call-pattern support and current limits
 
 Static candidate retries do not establish a universal guarantee for all CALL,

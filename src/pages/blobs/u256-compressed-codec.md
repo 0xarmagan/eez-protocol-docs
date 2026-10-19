@@ -1,7 +1,7 @@
 ---
 title: A Compact Byte Encoding for 256-bit Integers
 tags: [encoding, compression, evm, uint256]
-description: A self-describing, byte-oriented variable-length codec for any value in [0, 2^256-1]. Literal form plus a scientific (mantissa × base^exp) form whose exponent range is tuned per mantissa length to exactly span 10^28.
+description: "A self-describing, byte-oriented variable-length codec for any 256-bit EVM word, with a literal form and a scientific (mantissa × base^exp) form."
 ---
 
 # A Compact Byte Encoding for 256-bit Integers
@@ -25,7 +25,7 @@ Storing a small **mantissa** `m` and an **exponent** `exp` so that
 
 Each value is **one format byte** followed by **0–32 payload bytes**:
 
-```
+```text
 ┌────────────┬─────────────────────────────┐
 │ format (1) │ payload (0 … 32 bytes, LE)   │
 └────────────┴─────────────────────────────┘
@@ -55,7 +55,7 @@ family is therefore a pure optimization, used only when it is shorter.
 
 A scientific format encodes
 
-```
+```text
 value = mantissa × base^exp
 ```
 
@@ -78,7 +78,7 @@ for "round" magnitudes.
 
 Formally:
 
-```
+```text
 X(base, L) = min { exp ≥ 1 : (2^(8L) − 1) · base^exp  ≥  10^28 }
 ```
 
@@ -95,12 +95,14 @@ the ladders get shorter as `L` grows, and stop once `10^28` fits in `L` bytes
 outright (`L = 12`, where no exponent is needed). The result is a *descending
 triangle* of codes, with no wasted entries.
 
-> **Note on base 256.** `10^28 = 2^28·5^28` is only divisible by `256^exp`
-> (= `2^{8·exp}`) for `exp ≤ 3`, so you cannot *exactly* build `10^28` from a
-> byte-shift for larger exponents. The formula above uses the **reach**
-> criterion (largest representable value `≥ 10^28`), which coincides with the
-> exact-build statement for base 10 and is the natural generalization for
-> base 256.
+:::note
+**Note on base 256.** `10^28 = 2^28·5^28` is only divisible by `256^exp`
+(= `2^{8·exp}`) for `exp ≤ 3`, so you cannot *exactly* build `10^28` from a
+byte-shift for larger exponents. The formula above uses the **reach**
+criterion (largest representable value `≥ 10^28`), which coincides with the
+exact-build statement for base 10 and is the natural generalization for
+base 256.
+:::
 
 ### 2.3 Reserved family (`253 … 255`)
 

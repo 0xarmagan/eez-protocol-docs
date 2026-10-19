@@ -1,3 +1,7 @@
+---
+description: "Caveats of the current contracts: calling through cross-chain proxies, delivery and execution semantics, deployment and trust assumptions, edge cases."
+---
+
 # Caveats
 
 ## Calling through cross-chain proxies

@@ -1,3 +1,7 @@
+---
+description: "How to build execution entries for L1 (postAndVerifyBatch) and L2 (loadExecutionTable / executeIncomingCrossChainCall)."
+---
+
 # Execution Entry Specification
 
 How to correctly build execution entries for L1 (`postAndVerifyBatch`) and L2 (`loadExecutionTable` / `executeIncomingCrossChainCall`).
@@ -241,7 +245,7 @@ The `rollupUpdates` attached to an entry must be the entry's true state transiti
 
 Per-entry on L1, the contract verifies at the end of `_executeEntry`:
 
-```
+```text
 Σ rollupUpdates[i].etherDelta == _entryEtherDelta
 ```
 
@@ -259,7 +263,7 @@ After `CALL_BEGIN`, proxy resolution and payload encoding, both mutable processo
 
 A single `bytes32 rollingHash` per entry covers surviving tagged call observations and explicit rollback spans transported by `ContextResult`. Successful nested saved answers are not folded into `NESTED_END`. The accumulator is **seeded** with the entry's starting context and identity, then updated at tagged events:
 
-```
+```solidity
 seed (L1)      _rollingHash = keccak256(statesHash, proxyEntryHash)
                where statesHash = fold over rollupUpdates: keccak256(prev, rollupId_i, currentRoot_i), from bytes32(0)
 seed (L2)      _rollingHash = keccak256(bytes32(0), proxyEntryHash)
@@ -334,7 +338,7 @@ Two hash notations appear; they differ only in the `callGas` term:
 Alice on L1 calls a contract B on L2. B's proxy on L1 forwards Alice's call to L1's `EEZ.executeCrossChainCall` (consuming entry [0] — no calls execute on L1, the pre-computed result is returned). The L2 system later delivers the call on L2 via `executeIncomingCrossChainCall`.
 
 **L1 execution table** (`postAndVerifyBatch`):
-```
+```text
 [0] DEFERRED
     proxyEntryHash      = hash(false, src=Alice, srcRollup=MAINNET, dest=B, destRollup=L2, value=v, data=calldata)
     destinationRollupId = L2   // routes into verificationByRollup[L2].entryQueue; must be ∈ rollupUpdates
@@ -349,7 +353,7 @@ Alice on L1 calls a contract B on L2. B's proxy on L1 forwards Alice's call to L
 (An immediate L2Tx entry for the batch's other work can live in the same batch ahead of this one, with `proxyEntryHash == 0`.)
 
 **L2 execution table** (loaded atomically by `executeIncomingCrossChainCall`):
-```
+```text
 [0] proxyEntryHash = hash(false, Alice, MAINNET, B, L2, v, calldata)
     // same hash as the L1 entry — executeIncomingCrossChainCall recomputes it from
     // incomingCalls[0] and reverts EntryHashMismatch on divergence
@@ -372,7 +376,7 @@ Alice on L1 calls a contract B on L2. B's proxy on L1 forwards Alice's call to L
 Alice on L2 (through contract D) calls a contract C on L1.
 
 **L1 execution table** (`postAndVerifyBatch`):
-```
+```text
 [0] IMMEDIATE (L2Tx)   proxyEntryHash = bytes32(0)
     destinationRollupId = L2   // must be ∈ rollupUpdates (MAINNET can never be a delta);
                                // immediate entries inline-execute on L1 regardless of this field
@@ -389,7 +393,7 @@ Alice on L2 (through contract D) calls a contract C on L1.
 (Often this is `entries[0]` with `immediateEntryCount = 1`, executed inline by `postAndVerifyBatch`; a non-leading L2Tx entry is queued and consumed via `executeL2Txs(L2)`.)
 
 **L2 execution table** (`loadExecutionTable`):
-```
+```text
 [0] DEFERRED
     // L2-OUTGOING key (callGas = 0 under useGasLeft = false)
     proxyEntryHash = hashL2Out(false, src=D, srcRollup=L2, dest=C, destRollup=MAINNET, 0, callGas=0, calldata)
@@ -409,7 +413,7 @@ Alice on L2 (through contract D) calls a contract C on L1.
 Alice on L1 calls D's proxy on L1 (D lives on L2). D, while executing on L2, calls C's proxy on L2 (C lives on L1) — and that D→C leg is what executes on L1.
 
 **L1 execution table** (`postAndVerifyBatch`):
-```
+```text
 [0] DEFERRED
     proxyEntryHash      = hash(false, Alice, MAINNET, D, L2, 0, incrementProxy)
     destinationRollupId = L2
@@ -424,7 +428,7 @@ Alice on L1 calls D's proxy on L1 (D lives on L2). D, while executing on L2, cal
 ```
 
 **L2 execution table** (loaded atomically by `executeIncomingCrossChainCall`):
-```
+```text
 [0] proxyEntryHash = hash(false, Alice, MAINNET, D, L2, 0, incrementProxy)
     incomingCalls = [{ src=Alice, srcRollup=MAINNET, dest=D, value=0, data=incrementProxy, ... }]
     expectedOutgoingCalls = [ {
@@ -454,7 +458,7 @@ Alice on L1 calls D's proxy on L1 (D lives on L2). D, while executing on L2, cal
 Alice on L2 calls A's proxy on L2 (A lives on L1). A, while executing on L1, calls B's proxy on L1 (B lives on L2) — the A→B leg executes on L2.
 
 **L1 execution table** (`postAndVerifyBatch`):
-```
+```text
 [0] IMMEDIATE (L2Tx)   proxyEntryHash = bytes32(0)
     destinationRollupId = L2
     l2ToL1Calls = [{ src=Alice, srcRollup=L2, dest=A, value=0, data=callBProxy, ... }]
@@ -476,7 +480,7 @@ Alice on L2 calls A's proxy on L2 (A lives on L1). A, while executing on L1, cal
 ```
 
 **L2 execution table** (`loadExecutionTable`):
-```
+```text
 [0] DEFERRED
     // L2-OUTGOING key (callGas = 0 under useGasLeft = false)
     proxyEntryHash = hashL2Out(false, Alice, L2, A, MAINNET, 0, 0, callBProxy)
@@ -499,7 +503,7 @@ When a chain's prover output marks a cross-chain call as reverted even though th
 Example: SCA on L2 calls SCB which makes a successful cross-chain call to Counter on L1, then SCA reverts. From L1's perspective Counter.increment() ran cleanly, but L2's prover output says the higher-level transaction was rolled back, so L1 must not retain the state change.
 
 **L1 execution table** (`postAndVerifyBatch`):
-```
+```text
 [0] IMMEDIATE (L2Tx)   proxyEntryHash = bytes32(0)
     destinationRollupId = L2
     l2ToL1Calls = [
@@ -523,7 +527,7 @@ The self-call boundary provides rollback; `ContextResult` carries the recorded e
 When a reentrant cross-chain call **must revert** (e.g., the destination wraps the call in `try/catch`), it is a `success = false` entry in the same unified reentrant table:
 
 **`entry.expectedL1ToL2Calls`** of the consuming entry:
-```
+```text
 [k] ExpectedL1ToL2Call {
     expectedL1toL2Hash = keccak256( hash(false, D, MAINNET, B, L2, 0, increment) ‖ fireHash ),
         // fireHash = the live _rollingHash at the instant B's proxy is called — this pins the
@@ -547,7 +551,7 @@ success alternative exists later. See the [mutable retry tests](https://github.c
 
 When the same proxy call happens N times in a single transaction (e.g., a contract calling B's proxy twice in a row), each call consumes the next matching entry in the queue. Each entry has the same `proxyEntryHash`; the forward scan from the advancing cursor differentiates them.
 
-```
+```text
 [0] DEFERRED   proxyEntryHash = hash(B, ...) ... returnData = <first return>
 [1] DEFERRED   proxyEntryHash = hash(B, ...) ... returnData = <second return>
 ```
@@ -598,13 +602,13 @@ A `success = true` reentrant entry commits its frame into the host's continuous 
 Keep each side's open execution frame in one local transaction. The same leg can be a local call on one chain and an expected outgoing row on the other. For L1→L2→L1, the L1 callback belongs in the L1 entry's `l2ToL1Calls`, while its cached result is a row in L2's `expectedOutgoingCalls`. A further L1→L2 call made by that callback is a row in L1's `expectedL1ToL2Calls`.
 
 Wrong:
-```
+```text
 TX1 on L1: Alice → proxy → executeCrossChainCall (CALL into L2's space)
 TX2 on L1: system → executeCrossChainCall (reentrant CALL back from L2)  ← WRONG: separate tx
 ```
 
 Right:
-```
+```text
 TX1 on L1: Alice → L2 proxy → executeCrossChainCall
   → consumes one entry and executes its local l2ToL1Calls[] callbacks
   → if a callback calls another L2 proxy, resolve expectedL1ToL2Calls[k]

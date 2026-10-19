@@ -1,3 +1,7 @@
+---
+description: "Event signatures, ordering, rollback behavior and reconstruction from committed receipts and execution inputs, for the current contracts."
+---
+
 # Events and execution reconstruction
 
 Updated 2026-10-12. Reference for the current contracts: event signatures, ordering,
@@ -6,12 +10,6 @@ rollback behavior and reconstruction from committed receipts and execution input
 This reference describes the existing event interface. The tracked fixtures below
 cover specific mappings and evidence checks; they do not establish universal
 reconstruction of every call pattern from receipts and inputs.
-
-- [Current event interface](#current-event-interface)
-- [Identity, counters and rollback](#identity-counters-and-rollback)
-- [Event catalog](#current-protocol-and-reference-contract-events)
-- [What committed logs can establish](#what-committed-logs-can-establish)
-- [Reconstruction evidence](#reconstruction-evidence)
 
 ## Current event interface
 

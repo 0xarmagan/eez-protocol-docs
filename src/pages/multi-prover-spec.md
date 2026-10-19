@@ -1,3 +1,7 @@
+---
+description: "EEZ verifies batches with multiple proof systems. Each rollup's manager defines its accepted verifiers, verification keys and threshold."
+---
+
 # Multi-Prover Specification
 
 EEZ verifies batches with multiple proof systems. Each rollup's manager defines its
@@ -95,7 +99,7 @@ governance-driven, time-weighted, etc.) — the registry just consumes the retur
 
 ### Per-PS publicInputsHash (two-stage)
 
-```
+```text
 for each rollup r in rollupIdsWithProofSystems (rollupId-ascending):
   customDataHashes[r] = keccak256(abi.encode(rollupId_r, customData_r))
 
