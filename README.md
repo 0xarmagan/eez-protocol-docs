@@ -2,7 +2,7 @@
 
 [Vocs](https://vocs.dev) site for the [`docs/`](https://github.com/eez-association/eez-core-protocol/tree/main/docs) folder of `eez-core-protocol`. The pinned commit lives in `src/sync.json` and shows in the site banner.
 
-Live: https://0xarmagan.github.io/eez-protocol-docs/
+Live: https://eez-association.github.io/eez-protocol-docs/
 
 ## Develop
 

@@ -8,7 +8,7 @@ const core = 'https://github.com/eez-association/eez-core-protocol'
 export default defineConfig({
   title: 'EEZ Protocol Documents',
   basePath: '/eez-protocol-docs',
-  baseUrl: 'https://0xarmagan.github.io',
+  baseUrl: 'https://eez-association.github.io',
   renderStrategy: 'full-static',
   head: { base: false },
   colorScheme: 'dark',
@@ -33,7 +33,7 @@ export default defineConfig({
     text: 'Suggest changes to this page',
     link: (filePath) =>
       filePath.endsWith('.mdx')
-        ? `https://github.com/0xarmagan/eez-protocol-docs/edit/main/src/pages/${filePath}`
+        ? `https://github.com/eez-association/eez-protocol-docs/edit/main/src/pages/${filePath}`
         : `https://github.com/eez-association/eez-core-protocol/edit/main/docs/${filePath.replace(
             /[^/]+(?=\.md$)/,
             (name) => name.toUpperCase().replace(/-/g, '_'),
