@@ -39,6 +39,7 @@ export default defineConfig({
           )}`,
   },
   // Images come from scripts/og/build.mjs (GitHub Pages can't serve Vocs' dynamic /api/og).
+  // Serialized with toString like editLink, so it must stay self-contained.
   ogImageUrl: (path, { baseUrl }) =>
     `${baseUrl}/og/${path.replace(/^\/$/, '/index').slice(1)}.png`,
   socials: [
