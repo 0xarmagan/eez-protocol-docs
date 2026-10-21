@@ -7,14 +7,13 @@ const core = 'https://github.com/eez-association/eez-core-protocol'
 
 export default defineConfig({
   title: 'EEZ Protocol Documents',
-  basePath: '/eez-protocol-docs',
-  baseUrl: 'https://eez-association.github.io',
+  baseUrl: 'https://docs.eez.io',
   renderStrategy: 'full-static',
   head: { base: false },
   colorScheme: 'dark',
   accentColor: '#3BE57E',
-  logoUrl: '/eez-protocol-docs/logo.svg',
-  iconUrl: '/eez-protocol-docs/favicon.svg',
+  logoUrl: '/logo.svg',
+  iconUrl: '/favicon.svg',
   description: 'Specifications for the EEZ core protocol contracts.',
   banner: {
     content: `Synced from eez-core-protocol at commit ${commit}`,
@@ -40,9 +39,9 @@ export default defineConfig({
           )}`,
   },
   // Images come from scripts/og/build.mjs (GitHub Pages can't serve Vocs' dynamic /api/og).
-  // Serialized with toString like editLink, so the base path is written out here.
+  // Serialized with toString like editLink, so it must stay self-contained.
   ogImageUrl: (path, { baseUrl }) =>
-    `${baseUrl}/eez-protocol-docs/og/${path.replace(/^\/eez-protocol-docs/, '').replace(/^\/$/, '/index').slice(1)}.png`,
+    `${baseUrl}/og/${path.replace(/^\/$/, '/index').slice(1)}.png`,
   socials: [
     { icon: 'github', link: 'https://github.com/eez-association/eez-core-protocol' },
   ],
