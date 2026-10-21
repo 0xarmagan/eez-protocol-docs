@@ -23,7 +23,7 @@ export default defineConfig({
   },
   topNav: [
     { text: 'Docs', link: '/' },
-    { text: 'EEZ Demos', link: 'https://eez-demos.vercel.app', external: true },
+    { text: 'EEZ Demos', link: 'https://build.eez.io', external: true },
     { text: 'eez.dev', link: 'https://eez.dev', external: true },
   ],
   // Serialized with toString, so it must stay self-contained. Synced pages map back
