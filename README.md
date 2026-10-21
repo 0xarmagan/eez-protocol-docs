@@ -18,7 +18,7 @@ git clone --depth 1 https://github.com/eez-association/eez-core-protocol /tmp/co
 node scripts/sync-docs.mjs /tmp/core "$(git -C /tmp/core rev-parse --short HEAD)" src/pages
 ```
 
-The synced commit is saved in `src/sync.json` and shown in the site banner.
+The synced commit is saved in `src/sync.json`.
 
 ## Deploy
 

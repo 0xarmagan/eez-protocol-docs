@@ -266,6 +266,6 @@ for (const rel of files) {
   fs.writeFileSync(dest, src)
   report.push(`${rel} -> ${slug(rel)}`)
 }
-// Pinned commit, read by vocs.config.ts for the banner.
+// Pinned commit, shown on the link-preview images (scripts/og).
 fs.writeFileSync(path.join(out, '..', 'sync.json'), JSON.stringify({ commit }, null, 2) + '\n')
 console.log(report.join('\n'))
