@@ -1,9 +1,4 @@
-import { readFileSync } from 'node:fs'
 import { defineConfig } from 'vocs/config'
-
-// Written by scripts/sync-docs.mjs.
-const { commit } = JSON.parse(readFileSync('src/sync.json', 'utf8'))
-const core = 'https://github.com/eez-association/eez-core-protocol'
 
 export default defineConfig({
   title: 'EEZ Protocol Documents',
@@ -15,12 +10,6 @@ export default defineConfig({
   logoUrl: '/logo.svg',
   iconUrl: '/favicon.svg',
   description: 'Specifications for the EEZ core protocol contracts.',
-  banner: {
-    content: `Synced from eez-core-protocol at commit ${commit}`,
-    href: `${core}/tree/${commit}/docs`,
-    variant: 'info',
-    dismissable: false,
-  },
   topNav: [
     { text: 'Docs', link: '/' },
     { text: 'EEZ Demos', link: 'https://build.eez.io', external: true },
