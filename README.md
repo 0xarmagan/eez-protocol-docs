@@ -2,7 +2,7 @@
 
 [Vocs](https://vocs.dev) site for the [`docs/`](https://github.com/eez-association/eez-core-protocol/tree/main/docs) folder of `eez-core-protocol`. The pinned commit lives in `src/sync.json` and shows in the site banner.
 
-Live: https://eez-association.github.io/eez-protocol-docs/
+Live: https://docs.eez.io/
 
 ## Develop
 
@@ -24,4 +24,4 @@ The script rewrites links between docs to site routes, points source links at Gi
 
 `npm run build` first renders one 1200×630 preview image per page into `public/og/` (`scripts/og/build.mjs`, styled per the EEZ DESIGN.md, fonts vendored in `scripts/og/fonts/` under the OFL). Each image uses the page title, the page `description` (set in `DESCRIPTIONS` in the sync script) and its sidebar section. Run `npm run og` to regenerate them alone.
 
-Pushing to `main` deploys to GitHub Pages via `.github/workflows/deploy.yml`.
+Pull requests build the site and check its generated asset, navigation, canonical and preview-image URLs. Pushing to `main` deploys to GitHub Pages via `.github/workflows/deploy.yml`.
