@@ -1,0 +1,49 @@
+---
+description: "Give your coding agent the EEZ protocol docs: install the EEZ Docs skill, or read any page as Markdown."
+---
+
+# Build with AI
+
+Give your coding agent the EEZ protocol docs. The EEZ Docs skill tells the agent which page answers which task, and to read the page instead of guessing signatures, hashes or thresholds.
+
+## Install the EEZ Docs skill
+
+:::code-group
+```bash [skills CLI]
+npx skills add https://docs.eez.io
+```
+
+```bash [Manual]
+curl -fsSL https://docs.eez.io/SKILL.md --create-dirs -o .agents/skills/eez-docs/SKILL.md
+```
+:::
+
+The skills CLI asks which agents to install into and supports most of them, including Codex, Cursor, GitHub Copilot and Claude Code. For a manual install, `.agents/skills/` is the shared project folder; if your agent reads skills from its own folder, save the file there instead. For an agent without skills, paste this at the start of a conversation:
+
+```text
+Read https://docs.eez.io/SKILL.md and follow it for EEZ protocol questions.
+```
+
+:::note
+The skill is read-only. It explains the docs; it doesn't sign or send transactions. For live tooling, use [eez.dev](https://eez.dev).
+:::
+
+## Start a conversation
+
+Give the agent a concrete task and ask it to cite the pages it used:
+
+```text
+Using the EEZ docs, explain what postAndVerifyBatch checks before an entry
+can execute. Cite the pages you used.
+```
+
+## Read the docs as Markdown
+
+| URL | Contents |
+| --- | --- |
+| [`/SKILL.md`](https://docs.eez.io/SKILL.md) | The EEZ Docs skill: a page map and task routing |
+| [`/llms.txt`](https://docs.eez.io/llms.txt) | Every page with its title and description |
+| [`/llms-full.txt`](https://docs.eez.io/llms-full.txt) | The whole site in one file |
+| `/<page>.md` | One page as Markdown, for example [`/core-protocol-spec.md`](https://docs.eez.io/core-protocol-spec.md) |
+
+The pages are synced from [`eez-core-protocol`](https://github.com/eez-association/eez-core-protocol) at a pinned commit. The skill names that commit, so an agent can check a contract detail against the Solidity source.

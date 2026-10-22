@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vocs dev",
-    "build": "node scripts/og/build.mjs && vocs build",
+    "build": "node scripts/og/build.mjs && vocs build && node scripts/agents/build.mjs",
     "preview": "vocs preview",
     "postinstall": "patch-package",
     "og": "node scripts/og/build.mjs"
