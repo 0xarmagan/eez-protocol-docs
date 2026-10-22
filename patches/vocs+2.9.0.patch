@@ -24,3 +24,41 @@ index 8f1ab06..35744a1 100644
  }
  //# sourceMappingURL=SkipToContent.client.js.map
 \ No newline at end of file
+diff --git a/node_modules/vocs/dist/react/internal/Socials.client.js b/node_modules/vocs/dist/react/internal/Socials.client.js
+index d3762ce..2019cc4 100644
+--- a/node_modules/vocs/dist/react/internal/Socials.client.js
++++ b/node_modules/vocs/dist/react/internal/Socials.client.js
+@@ -8,6 +8,8 @@ import SimpleIconsGithub from '~icons/simple-icons/github';
+ import SimpleIconsTelegram from '~icons/simple-icons/telegram';
+ import SimpleIconsX from '~icons/simple-icons/x';
+ import { useConfig } from '../useConfig.js';
++// Patched: a globe icon for a plain website link (not one of Vocs' social types).
++const Globe = (props) => _jsxs("svg", { ...props, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true, children: [_jsx("circle", { cx: 12, cy: 12, r: 10 }), _jsx("path", { d: "M2 12h20" }), _jsx("path", { d: "M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" })] });
+ const icons = {
+     bluesky: SimpleIconsBluesky,
+     discord: SimpleIconsDiscord,
+@@ -15,6 +17,7 @@ const icons = {
+     github: SimpleIconsGithub,
+     telegram: SimpleIconsTelegram,
+     x: SimpleIconsX,
++    website: Globe,
+ };
+ const labels = {
+     bluesky: 'Bluesky',
+@@ -23,6 +26,7 @@ const labels = {
+     github: 'GitHub',
+     telegram: 'Telegram',
+     x: 'X (Twitter)',
++    website: 'Website',
+ };
+ export function Socials(props) {
+     const { className } = props;
+@@ -31,7 +35,7 @@ export function Socials(props) {
+         return null;
+     return (_jsx("div", { className: `vocs:flex vocs:items-center vocs:h-7 ${className ?? ''}`, "data-v-socials": true, children: socials.map((social, i) => {
+             const Icon = icons[social.icon];
+-            const label = labels[social.icon];
++            const label = social.label ?? labels[social.icon];
+             return (_jsxs(Fragment, { children: [i !== 0 && _jsx("div", { className: "vocs:w-px vocs:h-4 vocs:bg-primary vocs:mx-1" }), _jsx("a", { "aria-label": label, className: "vocs:flex vocs:items-center vocs:justify-center vocs:size-7 vocs:text-primary/60 vocs:hover:text-primary vocs:transition-colors vocs:duration-150", href: social.link, rel: "noopener noreferrer", target: "_blank", children: _jsx(Icon, { className: "vocs:size-[18px]" }) })] }, social.link));
+         }) }));
+ }
