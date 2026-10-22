@@ -33,6 +33,9 @@ export default defineConfig({
     `${baseUrl}/og/${path.replace(/^\/$/, '/index').slice(1)}.png`,
   socials: [
     { icon: 'github', link: 'https://github.com/eez-association/eez-core-protocol' },
+    { icon: 'x', link: 'https://x.com/etheconomiczone' },
+    // @ts-expect-error the 'website' icon and label come from patches/vocs+2.9.0.patch (Socials.client.js)
+    { icon: 'website', link: 'https://eez.io', label: 'EEZ website' },
   ],
   sidebar: [
     { text: 'Introduction', link: '/' },
