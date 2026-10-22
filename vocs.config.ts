@@ -37,6 +37,7 @@ export default defineConfig({
   sidebar: [
     { text: 'Introduction', link: '/' },
     { text: 'Walkthrough', link: '/eez-walkthrough' },
+    { text: 'Build with AI', link: '/build-with-ai' },
     {
       text: 'Specification',
       items: [
