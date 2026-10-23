@@ -74,6 +74,41 @@ function withDescription(src, rel) {
   return `---\n${[...body, line].join('\n')}\n---\n${src.slice(fm[0].length)}`
 }
 
+// Rewritten page intros, carried until upstream adopts them. Each applies only while the
+// upstream text still matches `old` exactly, so a later upstream edit is never overwritten.
+const INTROS = {
+  'EXECUTION_ENTRY_SPEC.md': {
+    old: `How to correctly build execution entries for L1 (\`postAndVerifyBatch\`) and L2 (\`loadExecutionTable\` / \`executeIncomingCrossChainCall\`).
+
+The protocol uses a **per-frame, sequential** execution model: every entry carries its own array of top-level calls processed in order (L1: \`L2ToL1Call[] l2ToL1Calls\`; L2: \`CrossChainCall[] incomingCalls\`), every reentrant frame carries its **own** sub-call array inside one unified expected-reentrant table (L1: \`ExpectedL1ToL2Call[] expectedL1ToL2Calls\`; L2: \`ExpectedOutgoingCrossChainCall[] expectedOutgoingCalls\`), and a single \`rollingHash\` checks the surviving recorded observations at the end. It does not directly hash all local state changes or successful nested saved answers; ordinary enclosing reverts erase their interior folds. See [Core §H.4](CORE_PROTOCOL_SPEC.md#h4-rolling-hash-integrity) and [call-pattern limits](CALL_PATTERN_LIMITS.md).`,
+    new: `An execution entry tells the contracts what a cross-chain call will do before it runs: the calls it makes, the results its reentrant calls get back, its return data, and a rolling hash that checks the run matched. This page covers how to build entries for both chains:
+
+- **L1:** \`postAndVerifyBatch\` verifies the batch's proofs, then runs or queues its entries.
+- **L2:** the system address loads entries with \`loadExecutionTable\`, or delivers an inbound call with \`executeIncomingCrossChainCall\`.
+
+Entries execute per frame, in order. Each entry processes its own top-level calls in sequence. Each reentrant frame has its own sub-calls inside the entry's single expected-reentrant table. One \`rollingHash\` checks the recorded observations that survive to the end. It doesn't directly hash every local state change or the saved results of successful nested calls, and an ordinary enclosing revert erases what was folded inside it. See [Core §H.4](CORE_PROTOCOL_SPEC.md#h4-rolling-hash-integrity) and [call-pattern limits](CALL_PATTERN_LIMITS.md).`,
+  },
+  'EVENTS.md': {
+    old: `Updated 2026-10-12. Reference for the current contracts: event signatures, ordering,
+rollback behavior and reconstruction from committed receipts and execution inputs.
+
+This reference describes the existing event interface. The tracked fixtures below
+cover specific mappings and evidence checks; they do not establish universal
+reconstruction of every call pattern from receipts and inputs.`,
+    new: `How to read the events the current contracts emit: their signatures and field order, how they are ordered and rolled back, and what an indexer can reconstruct from committed receipts and execution inputs.
+
+The tracked fixtures on this page cover specific mappings and evidence checks. They don't show that every call pattern can be reconstructed from receipts and inputs alone.`,
+  },
+}
+
+function withIntro(src, rel) {
+  const intro = INTROS[rel]
+  if (!intro) return src
+  if (!src.includes(intro.old)) { report.push(`INTRO STALE ${rel} (upstream changed; override skipped)`); return src }
+  report.push(`INTRO ${rel}`)
+  return src.replace(intro.old, () => intro.new)
+}
+
 const isAnchorItem = (l) => /^\s*[-*] \[[^\]]+\]\(#[^)\s]+\)\s*$/.test(l)
 
 // Vocs renders its own outline, so drop hand-written tables of contents.
@@ -247,6 +282,7 @@ const vocsify = (src, rel) =>
 for (const rel of files) {
   let src = fs.readFileSync(path.join(docsDir, rel), 'utf8')
   src = src.replace(/^\[TOC\]\s*\n/m, '')
+  src = withIntro(src, rel)
   src = src.replace(/\]\(([^)\s]+)\)/g, (m, target) => {
     if (/^(https?:|mailto:|#)/.test(target)) return m
     const [p, hash] = target.split('#')

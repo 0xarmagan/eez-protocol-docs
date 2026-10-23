@@ -4,12 +4,9 @@ description: "Event signatures, ordering, rollback behavior and reconstruction f
 
 # Events and execution reconstruction
 
-Updated 2026-10-12. Reference for the current contracts: event signatures, ordering,
-rollback behavior and reconstruction from committed receipts and execution inputs.
+How to read the events the current contracts emit: their signatures and field order, how they are ordered and rolled back, and what an indexer can reconstruct from committed receipts and execution inputs.
 
-This reference describes the existing event interface. The tracked fixtures below
-cover specific mappings and evidence checks; they do not establish universal
-reconstruction of every call pattern from receipts and inputs.
+The tracked fixtures on this page cover specific mappings and evidence checks. They don't show that every call pattern can be reconstructed from receipts and inputs alone.
 
 ## Current event interface
 
