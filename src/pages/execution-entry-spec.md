@@ -4,9 +4,12 @@ description: "How to build execution entries for L1 (postAndVerifyBatch) and L2 
 
 # Execution Entry Specification
 
-How to correctly build execution entries for L1 (`postAndVerifyBatch`) and L2 (`loadExecutionTable` / `executeIncomingCrossChainCall`).
+An execution entry tells the contracts what a cross-chain call will do before it runs: the calls it makes, the results its reentrant calls get back, its return data, and a rolling hash that checks the run matched. This page covers how to build entries for both chains:
 
-The protocol uses a **per-frame, sequential** execution model: every entry carries its own array of top-level calls processed in order (L1: `L2ToL1Call[] l2ToL1Calls`; L2: `CrossChainCall[] incomingCalls`), every reentrant frame carries its **own** sub-call array inside one unified expected-reentrant table (L1: `ExpectedL1ToL2Call[] expectedL1ToL2Calls`; L2: `ExpectedOutgoingCrossChainCall[] expectedOutgoingCalls`), and a single `rollingHash` checks the surviving recorded observations at the end. It does not directly hash all local state changes or successful nested saved answers; ordinary enclosing reverts erase their interior folds. See [Core §H.4](/core-protocol-spec#h4-rolling-hash-integrity) and [call-pattern limits](/call-pattern-limits).
+- **L1:** `postAndVerifyBatch` verifies the batch's proofs, then runs or queues its entries.
+- **L2:** the system address loads entries with `loadExecutionTable`, or delivers an inbound call with `executeIncomingCrossChainCall`.
+
+Entries execute per frame, in order. Each entry processes its own top-level calls in sequence. Each reentrant frame has its own sub-calls inside the entry's single expected-reentrant table. One `rollingHash` checks the recorded observations that survive to the end. It doesn't directly hash every local state change or the saved results of successful nested calls, and an ordinary enclosing revert erases what was folded inside it. See [Core §H.4](/core-protocol-spec#h4-rolling-hash-integrity) and [call-pattern limits](/call-pattern-limits).
 
 ---
 
